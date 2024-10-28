@@ -6,8 +6,6 @@ import {
   OnInit,
   Injectable,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { ApiConnectService } from '../api-connect.service';
 
 @Injectable({
@@ -39,12 +37,7 @@ export class MapHomeComponent implements AfterViewInit, OnInit {
   spanLong!: ElementRef;
   data: any;
   private url: string = ``;
-  fetchedData: any;
-  constructor(private http: HttpClient) {}
-
-  register(userData: any): Observable<any> {
-    return this.http.get(`${this.url}/register`, userData);
-  }
+  constructor(private apiService: ApiConnectService) {}
 
   ngAfterViewInit(): void {
     this.svgObject.nativeElement.addEventListener('load', () => {
@@ -64,25 +57,21 @@ export class MapHomeComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    fetch(this.url)
-      .then((response) => response.json())
-      .then((results) => results[1][0].iso2Code);
+    console.log('initialized');
   }
 
   onCountryClick(target: any): void {
-    // Handle the click event, e.g., display data for the clicked country
-    this.countryName.nativeElement.innerText = `${target.attributes.name.nodeValue}`;
+    // Handle the click event
     this.url = `https://api.worldbank.org/v2/country/${target.id}?format=json`;
-    this.http.get<any>(this.url).subscribe((data) => {
-      this.fetchedData = data[1][0];
-      // Use fetchedData here
-      console.log(this.fetchedData);
-      this.spanCap.nativeElement.innerText = this.fetchedData.capitalCity;
-      this.spanReg.nativeElement.innerText = this.fetchedData.region.value;
-      this.spanInc.nativeElement.innerText = this.fetchedData.incomeLevel.value;
-      this.spanPop.nativeElement.innerText = this.fetchedData.lendingType.id;
-      this.spanLat.nativeElement.innerText = this.fetchedData.latitude;
-      this.spanLong.nativeElement.innerText = this.fetchedData.longitude;
-    });
+    this.apiService.getData(this.url);
+    // display the fetched data in the HTML
+    this.data = this.apiService.fetchedData;
+    this.countryName.nativeElement.innerText = this.data.name;
+    this.spanCap.nativeElement.innerText = this.data.capitalCity;
+    this.spanReg.nativeElement.innerText = this.data.region.value;
+    this.spanInc.nativeElement.innerText = this.data.incomeLevel.value;
+    this.spanPop.nativeElement.innerText = this.data.lendingType.id;
+    this.spanLat.nativeElement.innerText = this.data.latitude;
+    this.spanLong.nativeElement.innerText = this.data.longitude;
   }
 }

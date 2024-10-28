@@ -49,3 +49,10 @@
   gap: 3rem;
   justify-content: space-evenly;
 }
+
+p {
+  font-size: 1rem;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
