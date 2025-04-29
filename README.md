@@ -1,3 +1,7 @@
+Interactive svg map that allows the user to click on any area to get information on the region.
+Utilizes API calls to public World Map API service through event listeners on preset paths in the svg image.
+
+
 Student ID:
 010148517
 
